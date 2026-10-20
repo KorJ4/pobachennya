@@ -10,38 +10,29 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Pacifico&family=Unbounded:wght@500;700;800&display=swap">
 <style>
-/* Layout: one perforated date-ticket centred on a blush ground; steps swap inside the ticket body, the tear-off stub sits at the bottom. */
+/* Layout: a wide boarding pass floating over a night sea. Steps on the left, the tear-off stub on the right fills in live; stacks vertically on phones. Single deliberate look (night sea + pale paper). */
 :root{
-  --bg:#FBE4EA;
-  --paper:#FFF8F9;
-  --ink:#3A0B1C;
-  --muted:#8C4A5F;
-  --line:#EFC3CF;
-  --tint:#FFE0E7;
-  --cherry:#C8173F;
-  --on-cherry:#FFFFFF;
-  --butter:#FFD45C;
-  --pink:#FF8FA8;
-  --shadow:0 1px 0 rgba(58,11,28,.04), 0 22px 48px -22px rgba(120,20,50,.38);
+  color-scheme:light;
+  --night:#04142B;
+  --deep:#0A2D5A;
+  --sea:#0F4F8F;
+  --paper:#F6FAFF;
+  --stub:#E8F2FD;
+  --ink:#0A2240;
+  --muted:#506B8C;
+  --line:#C3D8EE;
+  --tint:#DCEDFF;
+  --accent:#1366D6;
+  --on-accent:#FFFFFF;
+  --aqua:#1FB3CC;
+  --foam:#EAF6FF;
+  --sky:#8CCBFF;
+  --hull:#0B2A55;
   --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
   --f-body:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --f-hand:"Caveat","Segoe Script","Comic Sans MS",cursive;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#1A070E; --paper:#2A0C17; --ink:#FCE6EC; --muted:#CC97A9; --line:#4C1B2C;
-    --tint:#3E1222; --cherry:#FF4D6D; --on-cherry:#1A070E; --butter:#FFD45C; --pink:#FF8FA8;
-    --shadow:0 22px 48px -22px rgba(0,0,0,.75);
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#1A070E; --paper:#2A0C17; --ink:#FCE6EC; --muted:#CC97A9; --line:#4C1B2C;
-  --tint:#3E1222; --cherry:#FF4D6D; --on-cherry:#1A070E; --butter:#FFD45C; --pink:#FF8FA8;
-  --shadow:0 22px 48px -22px rgba(0,0,0,.75);
-  color-scheme:dark;
+  --f-hand:"Pacifico","Segoe Script","Brush Script MT",cursive;
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -50,7 +41,7 @@ html{height:100%}
 body{
   margin:0;
   min-height:100%;
-  background:var(--bg);
+  background:var(--deep);
   color:var(--ink);
   font-family:var(--f-body);
   font-size:16px;
@@ -58,39 +49,113 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding-block:28px;
+  padding-block:32px;
   padding-left:max(16px, env(safe-area-inset-left, 0px));
   padding-right:max(16px, env(safe-area-inset-right, 0px));
   overflow-x:hidden;
 }
 button{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--cherry);outline-offset:3px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 h1:focus,h2:focus{outline:none}
 
-/* ---------- ticket ---------- */
-.ticket{
-  position:relative;
-  width:100%;
-  max-width:580px;
-  background:var(--paper);
-  border-radius:24px;
-  box-shadow:var(--shadow);
-  animation:rise .6s cubic-bezier(.2,.8,.2,1) backwards;
+/* ---------- sea scene ---------- */
+.scene{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(ellipse 55% 38% at 90% 4%, rgba(140,203,255,.20), transparent 70%),
+    linear-gradient(180deg, var(--night) 0%, var(--deep) 58%, var(--sea) 100%);
 }
-@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.stars{position:absolute;inset:0}
+.star{
+  position:absolute;border-radius:50%;background:var(--foam);opacity:.5;
+  animation:twinkle 3s ease-in-out infinite;
+}
+@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.95}}
+.moon{
+  position:absolute;top:5vh;right:5vw;
+  width:clamp(48px,6vw,84px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 38% 35%, #FFFFFF 0%, var(--foam) 45%, #BBD9F5 100%);
+  box-shadow:0 0 50px 14px rgba(190,224,255,.22);
+}
+.waves{position:absolute;left:0;right:0;bottom:0;height:clamp(110px,26vh,250px)}
+.wave{
+  position:absolute;left:0;bottom:0;width:200%;
+  background-repeat:repeat-x;background-size:50% 100%;
+  animation:drift linear infinite;will-change:transform;
+}
+.w1{
+  height:100%;animation-duration:30s;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 50 Q180 10 360 50 T720 50 T1080 50 T1440 50 V120 H0 Z' fill='%232A7BC4' fill-opacity='.45'/%3E%3C/svg%3E");
+}
+.w2{
+  height:74%;animation-duration:21s;animation-direction:reverse;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q180 100 360 60 T720 60 T1080 60 T1440 60 V120 H0 Z' fill='%231A62A8' fill-opacity='.9'/%3E%3C/svg%3E");
+}
+.w3{
+  height:46%;animation-duration:14s;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 55 Q120 30 240 55 T480 55 T720 55 T960 55 T1200 55 T1440 55 V120 H0 Z' fill='%230B3A70'/%3E%3C/svg%3E");
+}
+@keyframes drift{to{transform:translateX(-50%)}}
+.boat{
+  position:absolute;left:6vw;bottom:50%;
+  width:clamp(56px,7vw,100px);height:auto;
+  transform-origin:50% 90%;
+  animation:bob 4.8s ease-in-out infinite;
+}
+.boat .hull{fill:var(--hull)}
+.boat .sail{fill:var(--foam)}
+.boat .jib{fill:var(--sky)}
+.boat .mast{fill:var(--foam)}
+.boat .flag{fill:var(--aqua)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-7px) rotate(4deg)}}
 
-.ticket-head{
-  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
-  padding:22px 28px 0;
+/* ---------- boarding pass ---------- */
+.pass{
+  position:relative;z-index:1;
+  width:100%;max-width:1080px;
+  display:grid;grid-template-columns:minmax(0,1fr) 300px;
+  filter:drop-shadow(0 26px 40px rgba(2,10,28,.5));
+  animation:rise .7s cubic-bezier(.2,.8,.2,1) backwards;
+}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.pass-main,.pass-stub{--r:15px}
+.pass-main{
+  min-width:0;
+  display:flex;flex-direction:column;
+  background:var(--paper);
+  border-radius:26px 0 0 26px;
+  -webkit-mask:radial-gradient(circle var(--r) at 100% 0,#0000 97%,#000),radial-gradient(circle var(--r) at 100% 100%,#0000 97%,#000);
+  -webkit-mask-composite:source-in;
+  mask:radial-gradient(circle var(--r) at 100% 0,#0000 97%,#000),radial-gradient(circle var(--r) at 100% 100%,#0000 97%,#000);
+  mask-composite:intersect;
+}
+.pass-stub{
+  position:relative;min-width:0;
+  display:flex;flex-direction:column;gap:20px;
+  padding:28px 26px 24px;
+  background:var(--stub);
+  border-left:2px dashed var(--line);
+  border-radius:0 26px 26px 0;
+  -webkit-mask:radial-gradient(circle var(--r) at 0 0,#0000 97%,#000),radial-gradient(circle var(--r) at 0 100%,#0000 97%,#000);
+  -webkit-mask-composite:source-in;
+  mask:radial-gradient(circle var(--r) at 0 0,#0000 97%,#000),radial-gradient(circle var(--r) at 0 100%,#0000 97%,#000);
+  mask-composite:intersect;
+}
+
+.pass-head{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:26px 40px 0;
 }
 .eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
   font-family:var(--f-display);font-weight:700;font-size:11px;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--cherry);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
 }
-.from{font-family:var(--f-hand);font-size:24px;line-height:1;color:var(--muted)}
+.eyebrow svg{width:16px;height:16px;flex-shrink:0}
+.from{font-family:var(--f-hand);font-size:19px;line-height:1.2;color:var(--muted)}
 
 .progress{
-  list-style:none;margin:0;padding:14px 28px 0;
+  list-style:none;margin:0;padding:14px 40px 0;
   display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;
 }
 .progress li{display:grid;gap:6px;min-width:0}
@@ -99,22 +164,21 @@ h1:focus,h2:focus{outline:none}
   font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.progress li.done .bar,.progress li.current .bar{background:var(--cherry)}
+.progress li.done .bar,.progress li.current .bar{background:var(--accent)}
 .progress li.current .lbl{color:var(--ink)}
 
-.body{padding:22px 28px 28px}
-.step{display:grid;gap:20px;animation:fade .35s ease both}
+.body{flex:1;display:flex;flex-direction:column;padding:24px 40px 32px}
+.step{flex:1;display:grid;gap:20px;align-content:start;animation:fade .35s ease both}
+#s1{align-content:center}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 
 h1,h2{
   font-family:var(--f-display);font-weight:700;margin:0;
   line-height:1.12;letter-spacing:-.01em;text-wrap:balance;
 }
-h1{font-size:clamp(27px,6.6vw,40px)}
-h2{font-size:clamp(22px,5.2vw,30px)}
-.lede{margin:0;color:var(--muted);max-width:46ch}
-.picked{margin:0;font-size:14px;color:var(--muted)}
-.picked strong{color:var(--ink);font-weight:600}
+h1{font-size:clamp(28px,3.7vw,50px)}
+h2{font-size:clamp(22px,2.6vw,32px)}
+.lede{margin:0;color:var(--muted);max-width:52ch}
 
 /* ---------- buttons ---------- */
 .btn{
@@ -124,63 +188,64 @@ h2{font-size:clamp(22px,5.2vw,30px)}
   transition:transform .25s cubic-bezier(.2,1.4,.4,1),background .2s,opacity .2s,filter .2s;
 }
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-primary{background:var(--cherry);color:var(--on-cherry)}
-.btn-primary:not(:disabled):hover{filter:brightness(1.08)}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-primary:not(:disabled):hover{filter:brightness(1.1)}
 .btn-ghost{background:transparent;color:var(--muted);padding-inline:6px}
 .btn-ghost:hover{color:var(--ink)}
 
-.answers{display:flex;align-items:center;gap:14px;min-height:92px;flex-wrap:wrap}
+.answers{display:flex;align-items:center;gap:14px;min-height:96px;flex-wrap:wrap}
 .btn-yes{
-  background:var(--cherry);color:var(--on-cherry);
-  font-family:var(--f-display);font-weight:700;font-size:18px;
-  padding:17px 36px;
+  background:var(--accent);color:var(--on-accent);
+  font-family:var(--f-display);font-weight:700;font-size:19px;
+  padding:18px 40px;
   transform-origin:left center;
   transform:scale(var(--grow,1));
 }
-.btn-yes:not(:disabled):hover{filter:brightness(1.08)}
+.btn-yes:not(:disabled):hover{filter:brightness(1.1)}
 .btn-no{background:var(--paper);color:var(--ink);border-color:var(--line)}
 .btn-no.loose{
   position:fixed;z-index:50;margin:0;
-  box-shadow:var(--shadow);
+  box-shadow:0 10px 24px -8px rgba(2,10,28,.55);
   transform:scale(var(--shrink,1));
   transition:left .26s cubic-bezier(.2,.9,.3,1.25),top .26s cubic-bezier(.2,.9,.3,1.25),transform .2s;
 }
 .btn-no.surrender{
-  background:var(--cherry);color:var(--on-cherry);border-color:var(--cherry);
+  background:var(--accent);color:var(--on-accent);border-color:var(--accent);
   animation:pulse 1.1s ease-in-out infinite;
 }
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
 .hint{
-  margin:0;min-height:1.3em;
-  font-family:var(--f-hand);font-weight:700;font-size:26px;line-height:1.2;
-  color:var(--cherry);transform:rotate(-2deg);transform-origin:left center;
+  margin:0;min-height:1.6em;
+  font-family:var(--f-hand);font-size:22px;line-height:1.4;
+  color:var(--accent);transform:rotate(-2deg);transform-origin:left center;
 }
 
-/* ---------- food ---------- */
+/* ---------- food & activities ---------- */
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:600px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .tile{
   display:grid;gap:2px;align-content:start;text-align:left;
-  padding:12px 12px 14px;border-radius:16px;
+  padding:12px 14px 14px;border-radius:16px;
   border:2px solid var(--line);background:transparent;cursor:pointer;
   transition:border-color .15s,background .15s,transform .15s;
 }
-.tile:hover{border-color:var(--cherry)}
+.tile:hover{border-color:var(--accent)}
 .tile:active{transform:scale(.97)}
 .tile .em{font-size:28px;line-height:1.15}
 .tile .nm{font-weight:600}
 .tile .nt{font-size:12.5px;line-height:1.3;color:var(--muted)}
-.tile[aria-pressed="true"]{border-color:var(--cherry);background:var(--tint)}
+.tile[aria-pressed="true"]{border-color:var(--accent);background:var(--tint)}
 
 .field{display:grid;gap:6px}
 .field label{font-size:13px;font-weight:600;color:var(--muted)}
 .field input{
   width:100%;font:inherit;color:var(--ink);background:var(--paper);
-  padding:12px 14px;border-radius:12px;border:2px solid var(--line);
+  padding:11px 14px;border-radius:12px;border:2px solid var(--line);
 }
-.field input:focus{outline:none;border-color:var(--cherry)}
-.err{margin:-8px 0 0;font-size:13px;color:var(--cherry);min-height:0}
+.field input:focus{outline:none;border-color:var(--accent)}
+.err{margin:-8px 0 0;font-size:13px;color:var(--accent)}
+.err:empty{display:none}
 
 /* ---------- days ---------- */
 .days{
@@ -189,22 +254,27 @@ h2{font-size:clamp(22px,5.2vw,30px)}
   scroll-snap-type:x proximity;scrollbar-width:thin;
 }
 .day{
-  flex:0 0 68px;scroll-snap-align:start;
+  flex:0 0 66px;scroll-snap-align:start;
   display:grid;justify-items:center;gap:1px;
-  padding:10px 0 12px;border-radius:16px;
+  padding:9px 0 11px;border-radius:14px;
   border:2px solid var(--line);background:transparent;cursor:pointer;
   transition:border-color .15s,background .15s;
 }
-.day:hover{border-color:var(--cherry)}
+@media (min-width:600px){
+  .days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));overflow:visible;padding:0;margin:0}
+  .day{flex:none}
+}
+.day:hover{border-color:var(--accent)}
 .day .wd{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.day.weekend .wd{color:var(--cherry)}
-.day .dn{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1.15;font-variant-numeric:tabular-nums}
+.day.weekend .wd{color:var(--aqua)}
+.day .dn{font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1.15;font-variant-numeric:tabular-nums}
 .day .mo{font-size:12px;color:var(--muted)}
-.day[aria-pressed="true"]{background:var(--cherry);border-color:var(--cherry);color:var(--on-cherry)}
-.day[aria-pressed="true"] .wd,.day[aria-pressed="true"] .mo{color:var(--on-cherry)}
+.day[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.day[aria-pressed="true"] .wd,.day[aria-pressed="true"] .mo{color:var(--on-accent)}
 
 /* ---------- times ---------- */
 .times{display:grid;gap:16px}
+@media (min-width:600px){.times{grid-template-columns:1fr 1fr}}
 .group-label{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{
@@ -213,8 +283,8 @@ h2{font-size:clamp(22px,5.2vw,30px)}
   font-weight:600;font-size:15px;line-height:1;font-variant-numeric:tabular-nums;
   transition:border-color .15s,background .15s;
 }
-.chip:hover:not(:disabled){border-color:var(--cherry)}
-.chip[aria-pressed="true"]{background:var(--cherry);border-color:var(--cherry);color:var(--on-cherry)}
+.chip:hover:not(:disabled){border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .chip:disabled{opacity:.35;cursor:not-allowed;text-decoration:line-through}
 
 .nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -222,47 +292,40 @@ h2{font-size:clamp(22px,5.2vw,30px)}
 
 /* ---------- final ---------- */
 .hand{
-  margin:-8px 0 0;font-family:var(--f-hand);font-weight:700;font-size:30px;line-height:1.1;
-  color:var(--cherry);transform:rotate(-2deg);transform-origin:left center;
+  margin:-6px 0 0;font-family:var(--f-hand);font-size:28px;line-height:1.3;
+  color:var(--accent);transform:rotate(-2deg);transform-origin:left center;
 }
-.summary{margin:0;display:grid}
-.summary .row{
-  display:flex;justify-content:space-between;align-items:baseline;gap:16px;
-  padding:11px 0;border-bottom:1px dashed var(--line);
+.tries{
+  justify-self:start;margin:0;
+  display:inline-flex;align-items:baseline;gap:10px;
+  padding:10px 16px;border-radius:12px;background:var(--tint);
+  font-size:14px;color:var(--muted);
 }
-.summary .row:first-child{border-top:1px dashed var(--line)}
-.summary dt{
-  flex-shrink:0;font-size:12px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);
-}
-.summary dd{
-  margin:0;min-width:0;text-align:right;
-  font-family:var(--f-display);font-weight:500;font-size:17px;line-height:1.3;
-  font-variant-numeric:tabular-nums;
-}
+.tries b{font-family:var(--f-display);font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
 #fallback{
   width:100%;font:14px/1.5 var(--f-body);color:var(--ink);background:var(--tint);
   border:2px solid var(--line);border-radius:12px;padding:12px;resize:vertical;
 }
-.toast{margin:0;font-size:14px;font-weight:600;color:var(--cherry);min-height:1.5em}
+.toast{margin:0;font-size:14px;font-weight:600;color:var(--accent);min-height:1.5em}
 
 /* ---------- stub ---------- */
-.stub{
-  position:relative;
-  display:flex;justify-content:space-between;align-items:center;gap:16px;
-  padding:16px 28px 20px;
-  border-top:2px dashed var(--line);
+.stub-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px}
+.stub-title{font-family:var(--f-display);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.flight{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.stub-fields{margin:0;display:grid;gap:14px}
+.stub-fields div{display:grid;gap:2px;min-width:0}
+.stub-fields dt{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.stub-fields dd{
+  margin:0;font-family:var(--f-display);font-weight:500;font-size:15px;line-height:1.3;
+  color:var(--ink);overflow-wrap:anywhere;
 }
-.stub::before,.stub::after{
-  content:"";position:absolute;top:-15px;width:28px;height:28px;border-radius:50%;
-  background:var(--bg);
-}
-.stub::before{left:-14px}
-.stub::after{right:-14px}
-.meta{display:grid;gap:3px;min-width:0;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.meta .serial{color:var(--ink);font-variant-numeric:tabular-nums}
+.stub-fields dd.empty{color:var(--line)}
+.stub-fields dd.pop{animation:pop .45s cubic-bezier(.2,1.5,.4,1)}
+@keyframes pop{from{transform:translateY(6px);opacity:.2}to{transform:none;opacity:1}}
+.stub-foot{margin-top:auto;display:grid;gap:10px}
+.serial{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-variant-numeric:tabular-nums}
 .barcode{
-  flex-shrink:0;width:112px;height:38px;opacity:.85;
+  height:40px;width:100%;opacity:.85;
   background:repeating-linear-gradient(90deg,
     var(--ink) 0 2px, transparent 2px 4px,
     var(--ink) 4px 5px, transparent 5px 8px,
@@ -270,156 +333,202 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     var(--ink) 13px 14px, transparent 14px 17px);
 }
 .stamp{
-  position:absolute;right:22px;top:50%;
-  width:88px;height:88px;border-radius:50%;
-  border:3px solid var(--cherry);background:var(--paper);color:var(--cherry);
+  position:absolute;right:22px;bottom:96px;
+  width:96px;height:96px;border-radius:50%;
+  border:3px solid var(--accent);color:var(--accent);
+  background:rgba(19,102,214,.07);
   display:grid;place-content:center;text-align:center;gap:2px;
-  transform:translateY(-50%) rotate(-14deg);
+  transform:rotate(-14deg);
   animation:stamp .55s cubic-bezier(.2,1.5,.4,1) both;
 }
-.stamp b{font-family:var(--f-display);font-weight:800;font-size:20px;line-height:1}
+.stamp b{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1}
 .stamp small{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 @keyframes stamp{
-  from{opacity:0;transform:translateY(-50%) rotate(-14deg) scale(2.3)}
-  to{opacity:1;transform:translateY(-50%) rotate(-14deg) scale(1)}
+  from{opacity:0;transform:rotate(-14deg) scale(2.3)}
+  to{opacity:1;transform:rotate(-14deg) scale(1)}
 }
 
 #fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
 
+/* ---------- phone: stack the pass ---------- */
+@media (max-width:860px){
+  .pass{grid-template-columns:minmax(0,1fr)}
+  .pass-main{
+    border-radius:24px 24px 0 0;
+    -webkit-mask:radial-gradient(circle var(--r) at 0 100%,#0000 97%,#000),radial-gradient(circle var(--r) at 100% 100%,#0000 97%,#000);
+    -webkit-mask-composite:source-in;
+    mask:radial-gradient(circle var(--r) at 0 100%,#0000 97%,#000),radial-gradient(circle var(--r) at 100% 100%,#0000 97%,#000);
+    mask-composite:intersect;
+  }
+  .pass-stub{
+    border-left:0;border-top:2px dashed var(--line);
+    border-radius:0 0 24px 24px;
+    -webkit-mask:radial-gradient(circle var(--r) at 0 0,#0000 97%,#000),radial-gradient(circle var(--r) at 100% 0,#0000 97%,#000);
+    -webkit-mask-composite:source-in;
+    mask:radial-gradient(circle var(--r) at 0 0,#0000 97%,#000),radial-gradient(circle var(--r) at 100% 0,#0000 97%,#000);
+    mask-composite:intersect;
+  }
+  .stub-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+  .stub-fields .full{grid-column:1 / -1}
+  .stamp{right:16px;bottom:84px;width:84px;height:84px}
+}
 @media (max-width:480px){
-  .ticket-head,.progress{padding-inline:20px}
+  .pass-head,.progress{padding-inline:20px}
   .body{padding:20px 20px 24px}
-  .stub{padding:14px 20px 18px}
-  .barcode{width:84px}
-  .stamp{right:14px;width:80px;height:80px}
+  .pass-stub{padding:22px 20px 20px}
 }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
-  .stamp{transform:translateY(-50%) rotate(-14deg)}
+  .stamp{transform:rotate(-14deg)}
 }
 </style>
 </head>
 <body>
 
-<main class="ticket" id="ticket">
-  <header class="ticket-head">
-    <span class="eyebrow">Квиток на побачення</span>
-    <span class="from">від Назара</span>
-  </header>
+<div class="scene" aria-hidden="true">
+  <div class="stars" id="stars"></div>
+  <div class="moon"></div>
+  <div class="waves">
+    <div class="wave w1"></div>
+    <svg class="boat" viewBox="0 0 100 90">
+      <path class="flag" d="M51 5c-1.6-2.4-5-1.5-5 1.1 0 2.3 3 3.9 5 5.6 2-1.7 5-3.3 5-5.6 0-2.6-3.4-3.5-5-1.1z"/>
+      <rect class="mast" x="49.5" y="11" width="2.6" height="52" rx="1"/>
+      <path class="sail" d="M53.5 13 L53.5 58 L86 58 Z"/>
+      <path class="jib" d="M48 19 L48 58 L22 58 Z"/>
+      <path class="hull" d="M8 62 H92 Q88 72 80 80 H20 Q12 72 8 62 Z"/>
+    </svg>
+    <div class="wave w2"></div>
+    <div class="wave w3"></div>
+  </div>
+</div>
 
-  <ol class="progress" id="progress" aria-label="Кроки">
-    <li class="current"><span class="bar"></span><span class="lbl">Так</span></li>
-    <li><span class="bar"></span><span class="lbl">Їжа</span></li>
-    <li><span class="bar"></span><span class="lbl">Розваги</span></li>
-    <li><span class="bar"></span><span class="lbl">Дата</span></li>
-    <li><span class="bar"></span><span class="lbl">Час</span></li>
-  </ol>
+<main class="pass" id="ticket">
+  <div class="pass-main">
+    <header class="pass-head">
+      <span class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.5"/><path d="M12 7.5V21"/><path d="M8 11h8"/><path d="M4 14a8 7 0 0 0 16 0"/></svg>
+        Квиток на побачення
+      </span>
+      <span class="from">від Назара</span>
+    </header>
 
-  <div class="body">
-    <!-- 1. Питання -->
-    <section class="step" id="s1">
-      <h1 tabindex="-1">Підеш зі мною на побачення?</h1>
-      <p class="lede">Від тебе лише кілька кліків: що їмо, чим займемось, коли й о котрій. Решту я беру на себе.</p>
-      <div class="answers">
-        <button id="yes" class="btn btn-yes" type="button">Так!</button>
-        <button id="no" class="btn btn-no" type="button">Ні</button>
-      </div>
-      <p class="hint" id="hint" aria-live="polite"></p>
-    </section>
+    <ol class="progress" id="progress" aria-label="Кроки">
+      <li class="current"><span class="bar"></span><span class="lbl">Так</span></li>
+      <li><span class="bar"></span><span class="lbl">Їжа</span></li>
+      <li><span class="bar"></span><span class="lbl">Розваги</span></li>
+      <li><span class="bar"></span><span class="lbl">Дата</span></li>
+      <li><span class="bar"></span><span class="lbl">Час</span></li>
+    </ol>
 
-    <!-- 2. Їжа -->
-    <section class="step" id="s2" hidden>
-      <h2 tabindex="-1">Що будемо їсти?</h2>
-      <p class="lede">Обери одне або впиши свій варіант.</p>
-      <div class="grid" id="foods" role="group" aria-label="Їжа"></div>
-      <div class="field">
-        <label for="foodCustom">Свій варіант</label>
-        <input id="foodCustom" type="text" maxlength="60" autocomplete="off" placeholder="Наприклад, грузинська кухня">
-      </div>
-      <div class="nav">
-        <button id="next2" class="btn btn-primary" type="button" disabled>Далі</button>
-      </div>
-    </section>
+    <div class="body">
+      <!-- 1. Питання -->
+      <section class="step" id="s1">
+        <h1 tabindex="-1">Підеш зі мною на побачення?</h1>
+        <p class="lede">Від тебе лише кілька кліків: що їмо, чим займемось, коли й о котрій. Решту я беру на себе.</p>
+        <div class="answers">
+          <button id="yes" class="btn btn-yes" type="button">Так!</button>
+          <button id="no" class="btn btn-no" type="button">Ні</button>
+        </div>
+        <p class="hint" id="hint" aria-live="polite"></p>
+      </section>
 
-    <!-- 3. Розваги -->
-    <section class="step" id="s3" hidden>
-      <h2 tabindex="-1">Чим займемось?</h2>
-      <p class="lede">Можна обрати кілька або вписати свою ідею.</p>
-      <div class="grid" id="acts" role="group" aria-label="Активності"></div>
-      <div class="field">
-        <label for="actCustom">Своя ідея</label>
-        <input id="actCustom" type="text" maxlength="60" autocomplete="off" placeholder="Наприклад, покататися на велосипедах">
-      </div>
-      <div class="nav">
-        <button id="backAct" class="btn btn-ghost" type="button">← Назад</button>
-        <button id="nextAct" class="btn btn-primary" type="button" disabled>Далі</button>
-      </div>
-    </section>
+      <!-- 2. Їжа -->
+      <section class="step" id="s2" hidden>
+        <h2 tabindex="-1">Що будемо їсти?</h2>
+        <p class="lede">Обери одне або впиши свій варіант.</p>
+        <div class="grid" id="foods" role="group" aria-label="Їжа"></div>
+        <div class="field">
+          <label for="foodCustom">Свій варіант</label>
+          <input id="foodCustom" type="text" maxlength="60" autocomplete="off" placeholder="Наприклад, грузинська кухня">
+        </div>
+        <div class="nav">
+          <button id="next2" class="btn btn-primary" type="button" disabled>Далі</button>
+        </div>
+      </section>
 
-    <!-- 4. Дата -->
-    <section class="step" id="s4" hidden>
-      <h2 tabindex="-1">Коли тобі зручно?</h2>
-      <p class="picked" id="picked3"></p>
-      <div class="days" id="days" role="group" aria-label="Дата"></div>
-      <div class="field">
-        <label for="dateOther">Або інша дата</label>
-        <input id="dateOther" type="date">
-      </div>
-      <p class="err" id="dateErr" role="alert"></p>
-      <div class="nav">
-        <button id="back3" class="btn btn-ghost" type="button">← Назад</button>
-        <button id="next3" class="btn btn-primary" type="button" disabled>Далі</button>
-      </div>
-    </section>
+      <!-- 3. Розваги -->
+      <section class="step" id="s3" hidden>
+        <h2 tabindex="-1">Чим займемось?</h2>
+        <p class="lede">Можна обрати кілька або вписати свою ідею.</p>
+        <div class="grid" id="acts" role="group" aria-label="Розваги"></div>
+        <div class="field">
+          <label for="actCustom">Своя ідея</label>
+          <input id="actCustom" type="text" maxlength="60" autocomplete="off" placeholder="Наприклад, покататися на велосипедах">
+        </div>
+        <div class="nav">
+          <button id="backAct" class="btn btn-ghost" type="button">← Назад</button>
+          <button id="nextAct" class="btn btn-primary" type="button" disabled>Далі</button>
+        </div>
+      </section>
 
-    <!-- 5. Час -->
-    <section class="step" id="s5" hidden>
-      <h2 tabindex="-1">О котрій зустрінемось?</h2>
-      <p class="picked" id="picked4"></p>
-      <div class="times">
-        <div><p class="group-label">Вдень</p><div class="chips" id="dayTimes"></div></div>
-        <div><p class="group-label">Ввечері</p><div class="chips" id="eveTimes"></div></div>
-      </div>
-      <div class="field">
-        <label for="timeOther">Або інший час</label>
-        <input id="timeOther" type="time" step="900">
-      </div>
-      <p class="err" id="timeErr" role="alert"></p>
-      <div class="nav">
-        <button id="back4" class="btn btn-ghost" type="button">← Назад</button>
-        <button id="confirm" class="btn btn-primary" type="button" disabled>Підтвердити</button>
-      </div>
-    </section>
+      <!-- 4. Дата -->
+      <section class="step" id="s4" hidden>
+        <h2 tabindex="-1">Коли тобі зручно?</h2>
+        <div class="days" id="days" role="group" aria-label="Дата"></div>
+        <div class="field">
+          <label for="dateOther">Або інша дата</label>
+          <input id="dateOther" type="date">
+        </div>
+        <p class="err" id="dateErr" role="alert"></p>
+        <div class="nav">
+          <button id="backDate" class="btn btn-ghost" type="button">← Назад</button>
+          <button id="nextDate" class="btn btn-primary" type="button" disabled>Далі</button>
+        </div>
+      </section>
 
-    <!-- 6. Підсумок -->
-    <section class="step" id="s6" hidden>
-      <h2 tabindex="-1">Побачення підтверджено</h2>
-      <p class="hand">Чекаю з нетерпінням!</p>
-      <dl class="summary">
-        <div class="row"><dt>Їмо</dt><dd id="sumFood"></dd></div>
-        <div class="row"><dt>Робимо</dt><dd id="sumAct"></dd></div>
-        <div class="row"><dt>Коли</dt><dd id="sumDate"></dd></div>
-        <div class="row"><dt>О котрій</dt><dd id="sumTime"></dd></div>
-        <div class="row"><dt>Спроб натиснути «Ні»</dt><dd id="sumNo"></dd></div>
-      </dl>
-      <p class="lede">Натисни «Скопіювати відповідь» і надішли мені в месенджер. Або просто зроби скриншот.</p>
-      <div class="nav">
-        <button id="edit" class="btn btn-ghost" type="button">Змінити вибір</button>
-        <button id="copy" class="btn btn-primary" type="button">Скопіювати відповідь</button>
-      </div>
-      <textarea id="fallback" rows="5" readonly hidden aria-label="Текст відповіді"></textarea>
-      <p class="toast" id="toast" role="status"></p>
-    </section>
+      <!-- 5. Час -->
+      <section class="step" id="s5" hidden>
+        <h2 tabindex="-1">О котрій зустрінемось?</h2>
+        <div class="times">
+          <div><p class="group-label">Вдень</p><div class="chips" id="dayTimes"></div></div>
+          <div><p class="group-label">Ввечері</p><div class="chips" id="eveTimes"></div></div>
+        </div>
+        <div class="field">
+          <label for="timeOther">Або інший час</label>
+          <input id="timeOther" type="time" step="900">
+        </div>
+        <p class="err" id="timeErr" role="alert"></p>
+        <div class="nav">
+          <button id="backTime" class="btn btn-ghost" type="button">← Назад</button>
+          <button id="confirm" class="btn btn-primary" type="button" disabled>Підтвердити</button>
+        </div>
+      </section>
+
+      <!-- 6. Підсумок -->
+      <section class="step" id="s6" hidden>
+        <h2 tabindex="-1">Побачення підтверджено</h2>
+        <p class="hand">Чекаю на борту!</p>
+        <p class="tries">Спроб натиснути «Ні» <b id="sumNo">0</b></p>
+        <p class="lede">Квиток заповнено. Натисни «Скопіювати відповідь» і надішли мені в месенджер. Або просто зроби скриншот квитка.</p>
+        <div class="nav">
+          <button id="edit" class="btn btn-ghost" type="button">Змінити вибір</button>
+          <button id="copy" class="btn btn-primary" type="button">Скопіювати відповідь</button>
+        </div>
+        <textarea id="fallback" rows="6" readonly hidden aria-label="Текст відповіді"></textarea>
+        <p class="toast" id="toast" role="status"></p>
+      </section>
+    </div>
   </div>
 
-  <footer class="stub">
-    <div class="meta">
-      <span>Ряд 1 · Місце: поруч зі мною</span>
-      <span class="serial" id="serial">№ ———— · чекає на «Так»</span>
+  <aside class="pass-stub" aria-label="Посадковий талон">
+    <div class="stub-head">
+      <span class="stub-title">Посадковий талон</span>
+      <span class="flight" id="flight">Рейс ПБ-————</span>
     </div>
-    <div class="barcode" aria-hidden="true"></div>
-    <div class="stamp" id="stamp" hidden aria-hidden="true"><b>Так!</b><small>підтверджено</small></div>
-  </footer>
+    <dl class="stub-fields">
+      <div><dt>Пасажир</dt><dd>Ти</dd></div>
+      <div><dt>Каюта</dt><dd>Поруч зі мною</dd></div>
+      <div class="full"><dt>Їжа</dt><dd id="tFood" class="empty">—</dd></div>
+      <div class="full"><dt>Розваги</dt><dd id="tAct" class="empty">—</dd></div>
+      <div><dt>Дата</dt><dd id="tDate" class="empty">—</dd></div>
+      <div><dt>Час</dt><dd id="tTime" class="empty">—</dd></div>
+    </dl>
+    <div class="stub-foot">
+      <span class="serial" id="serial">Посадка: чекає на «Так»</span>
+      <div class="barcode" aria-hidden="true"></div>
+    </div>
+    <div class="stamp" id="stamp" hidden aria-hidden="true"><b>Так!</b><small>на борту</small></div>
+  </aside>
 </main>
 
 <canvas id="fx" aria-hidden="true"></canvas>
@@ -453,14 +562,14 @@ h2{font-size:clamp(22px,5.2vw,30px)}
   const DAY_TIMES = ['12:00','13:00','14:00','15:00','16:00'];
   const EVE_TIMES = ['17:00','18:00','19:00','20:00','21:00'];
 
-  const NO_LABELS = ['Ні','Точно ні?','Подумай ще','Не-а','Майже!','Занадто повільно','Ну будь ласка','Ні-ні-ні','Я швидший','Спробуй ще','Остання спроба','Ну все'];
+  const NO_LABELS = ['Ні','Точно ні?','Подумай ще','Не-а','Не впіймаєш','Я в морі','Ну будь ласка','Ні-ні-ні','Я швидша за хвилю','Спробуй ще','Остання спроба','Буль-буль'];
   const HINTS = {
-    1:'Ой, кнопка втекла',
-    2:'Вона сьогодні сором’язлива',
-    4:'Кнопка «Так» уже росте',
+    1:'Кнопку віднесло хвилею',
+    2:'Вона пливе швидше за тебе',
+    4:'А кнопка «Так» росте, як приплив',
     6:'Може, все-таки «Так»?',
-    8:'Я можу так усю ніч',
-    10:'Ще трохи, і вона здасться'
+    8:'Ця кнопка як риба: не впіймаєш',
+    10:'Ще трохи, і вона піде на дно'
   };
   const MAX_TRIES = 12;
 
@@ -472,10 +581,43 @@ h2{font-size:clamp(22px,5.2vw,30px)}
   const parseIso = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
   const today0 = () => { const t = new Date(); t.setHours(0,0,0,0); return t; };
   const dayDiff = d => Math.round((d - today0()) / 86400000);
+  const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
   function fmtDate(d){
     const diff = dayDiff(d);
     const pre = diff === 0 ? 'сьогодні' : diff === 1 ? 'завтра' : WD_FULL[d.getDay()];
     return `${pre}, ${d.getDate()} ${MON_GEN[d.getMonth()]}`;
+  }
+
+  /* ---------- stars ---------- */
+  const starsEl = $('#stars');
+  for (let i = 0; i < 46; i++){
+    const s = document.createElement('span');
+    s.className = 'star';
+    const z = Math.random() < 0.2 ? 3 : 2;
+    s.style.width = s.style.height = z + 'px';
+    s.style.left = (Math.random() * 100).toFixed(2) + '%';
+    s.style.top = (Math.random() * 55).toFixed(2) + '%';
+    s.style.animationDuration = (2 + Math.random() * 3).toFixed(2) + 's';
+    s.style.animationDelay = (-Math.random() * 4).toFixed(2) + 's';
+    starsEl.appendChild(s);
+  }
+
+  /* ---------- live stub ---------- */
+  const tFood = $('#tFood'), tAct = $('#tAct'), tDate = $('#tDate'), tTime = $('#tTime');
+  const flight = $('#flight'), serial = $('#serial');
+  function setField(el, val){
+    const v = val || '—';
+    if (el.textContent === v) return;
+    el.textContent = v;
+    el.classList.toggle('empty', !val);
+    if (val && !reduce){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  }
+  function renderStub(){
+    setField(tFood, state.food);
+    setField(tAct, actsText());
+    setField(tDate, state.date ? cap(fmtDate(state.date)) : '');
+    setField(tTime, state.time);
+    flight.textContent = state.date ? `Рейс ПБ-${pad(state.date.getDate())}${pad(state.date.getMonth()+1)}` : 'Рейс ПБ-————';
   }
 
   /* ---------- step navigation ---------- */
@@ -489,21 +631,11 @@ h2{font-size:clamp(22px,5.2vw,30px)}
       li.classList.toggle('current', i + 1 === n);
     });
     stamp.hidden = n !== 6;
-    if (n === 4 || n === 5) updatePicked();
+    noBtn.hidden = n !== 1;
     if (n === 5) refreshTimes();
     const h = $('#s' + n).querySelector('h1,h2');
     if (h) h.focus({preventScroll:true});
     if ($('#ticket').getBoundingClientRect().top < 0) window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
-  }
-  function updatePicked(){
-    const p3 = $('#picked3'), p4 = $('#picked4');
-    p3.textContent = ''; p4.textContent = '';
-    const strong = t => { const s = document.createElement('strong'); s.textContent = t; return s; };
-    if (state.food) p3.append('Їмо: ', strong(state.food));
-    if (actsText()) p3.append(' · Робимо: ', strong(actsText()));
-    if (state.date){
-      p4.append(strong(state.food || ''), ' · ', strong(actsText()), ' · ', strong(fmtDate(state.date)));
-    }
   }
 
   /* ---------- the runaway "No" ---------- */
@@ -518,9 +650,9 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     return {t:parseFloat(cs.paddingTop)||0, r:parseFloat(cs.paddingRight)||0, b:parseFloat(cs.paddingBottom)||0, l:parseFloat(cs.paddingLeft)||0};
   }
   function bounds(w, h){
-    const i = insets(), pad = 16;
+    const i = insets(), p = 16;
     const vw = document.documentElement.clientWidth, vh = window.innerHeight;
-    return {minX: pad + i.l, maxX: Math.max(pad + i.l, vw - w - pad - i.r), minY: pad + i.t, maxY: Math.max(pad + i.t, vh - h - pad - i.b)};
+    return {minX:p + i.l, maxX:Math.max(p + i.l, vw - w - p - i.r), minY:p + i.t, maxY:Math.max(p + i.t, vh - h - p - i.b)};
   }
 
   function dodge(px, py){
@@ -531,6 +663,7 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     if (!noBtn.classList.contains('loose')){
       noBtn.style.left = r.left + 'px';
       noBtn.style.top = r.top + 'px';
+      document.body.appendChild(noBtn);
       noBtn.classList.add('loose');
       noBtn.getBoundingClientRect();
     }
@@ -552,7 +685,7 @@ h2{font-size:clamp(22px,5.2vw,30px)}
       const hitsYes = x < yr.right + 14 && x + w > yr.left - 14 && y < yr.bottom + 14 && y + h > yr.top - 14;
       if (hitsYes) continue;
       const d = Math.hypot(x + w / 2 - cx, y + h / 2 - cy);
-      if (d > 190){ best = {x, y}; break; }
+      if (d > 220){ best = {x, y}; break; }
       if (d > bestD){ bestD = d; best = {x, y}; }
     }
     if (best){
@@ -566,34 +699,29 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     noBtn.textContent = 'Добре, так';
     noBtn.style.setProperty('--shrink', 1);
     noBtn.classList.add('surrender');
-    hint.textContent = 'Кнопка «Ні» здалася';
+    hint.textContent = 'Кнопка «Ні» пішла на дно';
   }
 
   function clampNo(){
     if (!noBtn.classList.contains('loose')) return;
     const b = bounds(noBtn.offsetWidth, noBtn.offsetHeight);
-    const x = Math.min(Math.max(b.minX, parseFloat(noBtn.style.left) || 0), b.maxX);
-    const y = Math.min(Math.max(b.minY, parseFloat(noBtn.style.top) || 0), b.maxY);
-    noBtn.style.left = x + 'px';
-    noBtn.style.top = y + 'px';
+    noBtn.style.left = Math.min(Math.max(b.minX, parseFloat(noBtn.style.left) || 0), b.maxX) + 'px';
+    noBtn.style.top = Math.min(Math.max(b.minY, parseFloat(noBtn.style.top) || 0), b.maxY) + 'px';
   }
 
-  // Mouse: run away before the cursor even arrives
   document.addEventListener('pointermove', e => {
     if (e.pointerType !== 'mouse' || surrendered || state.step !== 1) return;
     const r = noBtn.getBoundingClientRect();
     const dx = Math.max(r.left - e.clientX, 0, e.clientX - r.right);
     const dy = Math.max(r.top - e.clientY, 0, e.clientY - r.bottom);
-    if (Math.hypot(dx, dy) < 56 && performance.now() - lastDodge > 160) dodge(e.clientX, e.clientY);
+    if (Math.hypot(dx, dy) < 60 && performance.now() - lastDodge > 160) dodge(e.clientX, e.clientY);
   });
-  // Touch / pen: jump on contact
   noBtn.addEventListener('pointerdown', e => {
     if (surrendered) return;
     e.preventDefault();
     dodge(e.clientX, e.clientY);
   });
   noBtn.addEventListener('touchstart', e => { if (!surrendered) e.preventDefault(); }, {passive:false});
-  // Keyboard or anything that still lands a click
   noBtn.addEventListener('click', e => {
     if (surrendered){ sayYes(noBtn); return; }
     e.preventDefault();
@@ -607,11 +735,12 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     burst(r.left + r.width / 2, r.top + r.height / 2, 80);
     yesBtn.disabled = true;
     noBtn.disabled = true;
-    hint.textContent = state.attempts ? 'Я знав, що «Ні» не спрацює' : 'Ура! Одразу «Так»';
+    hint.textContent = state.attempts ? 'Я знав, що «Ні» піде на дно' : 'Ура! Одразу «Так»';
+    serial.textContent = 'Посадка: реєстрація';
     setTimeout(() => go(2), reduce ? 0 : 900);
   }
 
-  /* ---------- food ---------- */
+  /* ---------- tiles ---------- */
   function buildTiles(el, list){
     list.forEach(f => {
       const b = document.createElement('button');
@@ -625,48 +754,51 @@ h2{font-size:clamp(22px,5.2vw,30px)}
       el.appendChild(b);
     });
   }
+
+  /* ---------- food ---------- */
   const foodsEl = $('#foods'), foodCustom = $('#foodCustom'), next2 = $('#next2');
   buildTiles(foodsEl, FOODS);
-  const clearTiles = () => foodsEl.querySelectorAll('.tile').forEach(t => t.setAttribute('aria-pressed', 'false'));
+  const clearTiles = el => el.querySelectorAll('.tile').forEach(t => t.setAttribute('aria-pressed', 'false'));
   foodsEl.addEventListener('click', e => {
     const b = e.target.closest('.tile'); if (!b) return;
-    clearTiles();
+    clearTiles(foodsEl);
     b.setAttribute('aria-pressed', 'true');
     foodCustom.value = '';
     state.food = b.dataset.name;
     next2.disabled = false;
+    renderStub();
   });
   foodCustom.addEventListener('input', () => {
-    const v = foodCustom.value.trim();
-    clearTiles();
-    state.food = v || null;
+    clearTiles(foodsEl);
+    state.food = foodCustom.value.trim() || null;
     next2.disabled = !state.food;
+    renderStub();
   });
   next2.addEventListener('click', () => go(3));
 
   /* ---------- activities (multi-select) ---------- */
   const actsEl = $('#acts'), actCustom = $('#actCustom'), nextAct = $('#nextAct');
   buildTiles(actsEl, ACTS);
-  const syncActs = () => { nextAct.disabled = !actsText(); };
   actsEl.addEventListener('click', e => {
     const b = e.target.closest('.tile'); if (!b) return;
-    const on = b.getAttribute('aria-pressed') !== 'true';
-    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
     state.acts = [...actsEl.querySelectorAll('.tile[aria-pressed="true"]')].map(t => t.dataset.name);
-    syncActs();
+    nextAct.disabled = !actsText();
+    renderStub();
   });
   actCustom.addEventListener('input', () => {
     state.actCustom = actCustom.value.trim();
-    syncActs();
+    nextAct.disabled = !actsText();
+    renderStub();
   });
   $('#backAct').addEventListener('click', () => go(2));
   nextAct.addEventListener('click', () => go(4));
 
   /* ---------- date ---------- */
-  const daysEl = $('#days'), dateOther = $('#dateOther'), next3 = $('#next3'), dateErr = $('#dateErr');
+  const daysEl = $('#days'), dateOther = $('#dateOther'), nextDate = $('#nextDate'), dateErr = $('#dateErr');
   (function buildDays(){
     const t = today0();
-    for (let i = 0; i < 21; i++){
+    for (let i = 0; i < 14; i++){
       const d = new Date(t); d.setDate(t.getDate() + i);
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'day';
@@ -689,24 +821,27 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     dateOther.value = '';
     dateErr.textContent = '';
     state.date = parseIso(b.dataset.key);
-    next3.disabled = false;
+    nextDate.disabled = false;
+    renderStub();
   });
   dateOther.addEventListener('change', () => {
     const v = dateOther.value;
-    if (!v){ return; }
+    if (!v) return;
     const d = parseIso(v);
     if (dayDiff(d) < 0){
       dateErr.textContent = 'Ця дата вже минула. Обери сьогодні або пізніше.';
-      state.date = null; markDay(''); next3.disabled = true;
+      state.date = null; markDay(''); nextDate.disabled = true;
+      renderStub();
       return;
     }
     dateErr.textContent = '';
     state.date = d;
     markDay(v);
-    next3.disabled = false;
+    nextDate.disabled = false;
+    renderStub();
   });
-  $('#back3').addEventListener('click', () => go(3));
-  next3.addEventListener('click', () => go(5));
+  $('#backDate').addEventListener('click', () => go(3));
+  nextDate.addEventListener('click', () => go(5));
 
   /* ---------- time ---------- */
   const confirmBtn = $('#confirm'), timeOther = $('#timeOther'), timeErr = $('#timeErr');
@@ -741,6 +876,7 @@ h2{font-size:clamp(22px,5.2vw,30px)}
       state.time = null;
     }
     confirmBtn.disabled = !state.time;
+    renderStub();
   }
   document.querySelector('.times').addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b || b.disabled) return;
@@ -749,36 +885,34 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     timeErr.textContent = '';
     state.time = b.dataset.t;
     confirmBtn.disabled = false;
+    renderStub();
   });
   timeOther.addEventListener('input', () => {
     const v = timeOther.value;
     chips().forEach(c => c.setAttribute('aria-pressed', 'false'));
-    if (!v){ state.time = null; timeErr.textContent = ''; confirmBtn.disabled = true; return; }
+    if (!v){ state.time = null; timeErr.textContent = ''; confirmBtn.disabled = true; renderStub(); return; }
     if (isPast(v)){
       timeErr.textContent = 'Цей час уже майже минув. Обери пізніший.';
-      state.time = null; confirmBtn.disabled = true; return;
+      state.time = null; confirmBtn.disabled = true; renderStub(); return;
     }
     timeErr.textContent = '';
     state.time = v;
     confirmBtn.disabled = false;
+    renderStub();
   });
-  $('#back4').addEventListener('click', () => go(4));
+  $('#backTime').addEventListener('click', () => go(4));
 
   /* ---------- final ---------- */
   confirmBtn.addEventListener('click', () => {
-    $('#sumFood').textContent = state.food;
-    $('#sumAct').textContent = actsText();
-    $('#sumDate').textContent = fmtDate(state.date);
-    $('#sumTime').textContent = state.time;
     $('#sumNo').textContent = state.attempts ? String(state.attempts) : '0, одразу «Так»';
-    $('#serial').textContent = `№ ${pad(state.date.getDate())}${pad(state.date.getMonth()+1)}-${state.time.replace(':','')} · підтверджено`;
+    serial.textContent = `ПБ-${pad(state.date.getDate())}${pad(state.date.getMonth()+1)}-${state.time.replace(':','')} · підтверджено`;
     $('#fallback').hidden = true;
     $('#toast').textContent = '';
     go(6);
-    burst(0, 0, 140, 'rain');
+    rise(150);
   });
   $('#edit').addEventListener('click', () => {
-    $('#serial').textContent = '№ ———— · чекає на «Так»';
+    serial.textContent = 'Посадка: реєстрація';
     go(2);
   });
 
@@ -789,7 +923,7 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     toastTimer = setTimeout(() => { toastEl.textContent = ''; }, 5000);
   }
   function answerText(){
-    return `Так, я йду на побачення! 💘\nЇмо: ${state.food}\nРобимо: ${actsText()}\nКоли: ${fmtDate(state.date)}\nО котрій: ${state.time}\nСпроб натиснути «Ні»: ${state.attempts}`;
+    return `Так, я йду на побачення! 💙\nЇмо: ${state.food}\nРобимо: ${actsText()}\nКоли: ${fmtDate(state.date)}\nО котрій: ${state.time}\nСпроб натиснути «Ні»: ${state.attempts}`;
   }
   $('#copy').addEventListener('click', () => {
     const text = answerText();
@@ -806,7 +940,7 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     } catch (err) { fail(); }
   });
 
-  /* ---------- hearts ---------- */
+  /* ---------- hearts & bubbles ---------- */
   const fx = $('#fx'), ctx = fx.getContext('2d');
   let parts = [], raf = 0;
   function sizeFx(){
@@ -817,7 +951,7 @@ h2{font-size:clamp(22px,5.2vw,30px)}
   }
   function palette(){
     const cs = getComputedStyle(document.documentElement);
-    return ['--cherry', '--pink', '--butter', '--cherry'].map(v => cs.getPropertyValue(v).trim() || '#C8173F');
+    return ['--accent', '--aqua', '--sky', '--foam'].map(v => cs.getPropertyValue(v).trim() || '#1366D6');
   }
   function heart(s){
     ctx.beginPath();
@@ -829,50 +963,65 @@ h2{font-size:clamp(22px,5.2vw,30px)}
     ctx.closePath();
     ctx.fill();
   }
-  function burst(x, y, n, mode){
+  function bubble(s, color){
+    ctx.beginPath();
+    ctx.arc(0, 0, s / 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(234,246,255,.12)';
+    ctx.fill();
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = color;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(-s * 0.15, -s * 0.15, s * 0.12, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+  function start(){ if (!raf){ sizeFx(); raf = requestAnimationFrame(tick); } }
+  function burst(x, y, n){
     if (reduce) return;
-    if (!raf) sizeFx();
     const cols = palette();
     for (let i = 0; i < n; i++){
-      const rain = mode === 'rain';
       const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.15;
       const sp = 5 + Math.random() * 7;
-      parts.push({
-        rain,
-        x: rain ? Math.random() * innerWidth : x,
-        y: rain ? -20 - Math.random() * innerHeight * 0.6 : y,
-        vx: rain ? 0 : Math.cos(a) * sp,
-        vy: rain ? 1 + Math.random() * 2 : Math.sin(a) * sp,
-        r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.15,
-        s: 10 + Math.random() * 16,
-        c: cols[i % cols.length],
-        phase: Math.random() * 6.28,
-        life: 0, max: rain ? 320 : 130 + Math.random() * 50
-      });
+      parts.push({kind:'heart', mode:'burst', x, y, vx:Math.cos(a) * sp, vy:Math.sin(a) * sp,
+        r:Math.random() * Math.PI, vr:(Math.random() - 0.5) * 0.15, s:10 + Math.random() * 16,
+        c:cols[i % cols.length], phase:0, life:0, max:130 + Math.random() * 50});
     }
-    if (!raf) raf = requestAnimationFrame(tick);
+    start();
+  }
+  function rise(n){
+    if (reduce) return;
+    const cols = palette();
+    for (let i = 0; i < n; i++){
+      const isBubble = i % 3 !== 0;
+      parts.push({kind:isBubble ? 'bubble' : 'heart', mode:'rise',
+        x:Math.random() * innerWidth, y:innerHeight + 20 + Math.random() * innerHeight * 0.7,
+        vx:0, vy:-(1.4 + Math.random() * 2.4),
+        r:(Math.random() - 0.5) * 0.6, vr:0, s:isBubble ? 8 + Math.random() * 22 : 12 + Math.random() * 14,
+        c:isBubble ? cols[3] : cols[i % 3], phase:Math.random() * 6.28, life:0, max:420});
+    }
+    start();
   }
   function tick(){
     ctx.clearRect(0, 0, innerWidth, innerHeight);
-    parts = parts.filter(p => p.life < p.max && p.y < innerHeight + 40);
+    parts = parts.filter(p => p.life < p.max && p.y < innerHeight + innerHeight * 0.8 && p.y > -60);
     for (const p of parts){
       p.life++;
-      if (p.rain){
-        p.vy = Math.min(p.vy + 0.04, 3.2);
-        p.x += Math.sin(p.life / 22 + p.phase) * 0.9;
+      if (p.mode === 'rise'){
+        p.x += Math.sin(p.life / 24 + p.phase) * 0.8;
       } else {
         p.vy = Math.min(p.vy + 0.2, 7);
         p.vx *= 0.985;
         p.x += p.vx;
+        p.r += p.vr;
       }
       p.y += p.vy;
-      p.r += p.vr;
       ctx.save();
       ctx.globalAlpha = Math.max(0, Math.min(1, (p.max - p.life) / 30));
       ctx.translate(p.x, p.y);
       ctx.rotate(p.r * 0.4);
-      ctx.fillStyle = p.c;
-      heart(p.s);
+      if (p.kind === 'bubble') bubble(p.s, p.c);
+      else { ctx.fillStyle = p.c; heart(p.s); }
       ctx.restore();
     }
     if (parts.length) raf = requestAnimationFrame(tick);
